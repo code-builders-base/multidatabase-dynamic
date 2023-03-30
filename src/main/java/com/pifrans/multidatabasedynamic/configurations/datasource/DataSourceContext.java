@@ -2,10 +2,12 @@ package com.pifrans.multidatabasedynamic.configurations.datasource;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DataSourceContext {
-    public static final String DEFAULT_DATABASE = "data_01";
+    @Value("${datasource.dynamic.default.name}")
+    public static String DEFAULT_DATABASE;
     private static final ThreadLocal<String> currentDatabase = ThreadLocal.withInitial(() -> DEFAULT_DATABASE);
 
 

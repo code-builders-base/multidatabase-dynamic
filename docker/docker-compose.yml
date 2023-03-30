@@ -1,0 +1,24 @@
+version: "3.7"
+
+networks:
+  network:
+    driver: bridge
+    name: network
+
+services:
+  db-postgresql:
+    image: postgres:10
+    container_name: db-postgresql
+    hostname: db-postgresql
+    volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: main, data_01, data_02, data_03
+    ports:
+      - "5432:5432"
+    networks:
+      - network
+    restart: always
+

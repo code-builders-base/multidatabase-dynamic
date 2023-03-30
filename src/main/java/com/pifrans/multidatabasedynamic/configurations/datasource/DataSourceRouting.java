@@ -4,6 +4,7 @@ import com.pifrans.multidatabasedynamic.repositories.databases.DatabaseRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -18,6 +19,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DataSourceRouting extends AbstractRoutingDataSource {
     private final DatabaseRepository databaseRepository;
+
+    @Value("${datasource.dynamic.default.url}")
+    private String urlDatasource;
+
+    @Value("${datasource.dynamic.default.user-name}")
+    private String userName;
+
+    @Value("${datasource.dynamic.default.password}")
+    private String password;
 
 
     @Override
@@ -35,9 +45,9 @@ public class DataSourceRouting extends AbstractRoutingDataSource {
 
     private DataSource defaultDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/data_01");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setUrl(urlDatasource);
+        dataSource.setUsername(userName);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
@@ -48,8 +58,8 @@ public class DataSourceRouting extends AbstractRoutingDataSource {
         for (var database : databases) {
             var dataSource = new DriverManagerDataSource();
             dataSource.setUrl(database.getUrl());
-            dataSource.setUsername("root");
-            dataSource.setPassword("topsecret");
+            dataSource.setUsername(database.getUserName());
+            dataSource.setPassword(database.getPassword());
             dataSources.put(database.getName(), dataSource);
         }
         return dataSources;

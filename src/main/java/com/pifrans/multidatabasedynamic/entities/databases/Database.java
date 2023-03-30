@@ -19,4 +19,6 @@ public class Database implements Serializable {
     private Long id;
     private String name;
     private String url;
+    private String userName;
+    private String password;
 }
